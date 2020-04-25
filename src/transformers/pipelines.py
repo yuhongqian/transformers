@@ -418,7 +418,7 @@ class Pipeline(_ScikitCompat):
         """
         return {name: tensor.to(self.device) for name, tensor in inputs.items()}
 
-    def _parse_and_tokenize(self, *texts, pad_to_max_length=False, **kwargs):
+    def _parse_and_tokenize(self, *texts, pad_to_max_length=True, **kwargs):
         """
         Parse arguments and tokenize
         """
@@ -427,7 +427,7 @@ class Pipeline(_ScikitCompat):
         inputs = self.tokenizer.batch_encode_plus(
             inputs, add_special_tokens=True, return_tensors=self.framework, pad_to_max_length=pad_to_max_length,
         )
-
+        print(inputs["input_ids"].shape)
         return inputs
 
     def __call__(self, *texts, **kwargs):
@@ -651,8 +651,8 @@ class TextClassificationPipeline(Pipeline):
 
     def __call__(self, *args, **kwargs):
         outputs = super().__call__(*args, **kwargs)
-        scores = np.exp(outputs) / np.exp(outputs).sum(-1)
-        return [{"label": self.model.config.id2label[item.argmax()], "score": item.max()} for item in scores]
+        scores = np.exp(outputs) / np.exp(outputs).sum(-1, keepdims=True)
+        return [{"label": self.model.config.id2label[item.argmax()], "score": float(item.max())} for item in scores]
 
 
 class FillMaskPipeline(Pipeline):
