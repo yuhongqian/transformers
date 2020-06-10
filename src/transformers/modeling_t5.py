@@ -629,12 +629,6 @@ class T5PreTrainedModel(PreTrainedModel):
 class T5Stack(T5PreTrainedModel):
     def __init__(self, config, embed_tokens=None):
         super().__init__(config)
-<<<<<<< HEAD
-        self.output_attentions = config.output_attentions
-=======
-        self.output_hidden_states = config.output_hidden_states
->>>>>>> master
-
         self.embed_tokens = embed_tokens
         self.is_decoder = config.is_decoder
 
@@ -665,13 +659,9 @@ class T5Stack(T5PreTrainedModel):
         head_mask=None,
         past_key_value_states=None,
         use_cache=False,
-<<<<<<< HEAD
         output_hidden_states=False,
-=======
         output_attentions=None,
->>>>>>> master
     ):
-
         output_attentions = output_attentions if output_attentions is not None else self.config.output_attentions
 
         if input_ids is not None and inputs_embeds is not None:
@@ -884,14 +874,6 @@ class T5Model(T5PreTrainedModel):
     def get_decoder(self):
         return self.decoder
 
-    def _prune_heads(self, heads_to_prune):
-        """ Prunes heads of the model.
-            heads_to_prune: dict of {layer_num: list of heads to prune in this layer}
-            See base class PreTrainedModel
-        """
-        for layer, heads in heads_to_prune.items():
-            self.encoder.layer[layer].attention.prune_heads(heads)
-
     @add_start_docstrings_to_callable(T5_INPUTS_DOCSTRING)
     def forward(
         self,
@@ -905,11 +887,8 @@ class T5Model(T5PreTrainedModel):
         inputs_embeds=None,
         decoder_inputs_embeds=None,
         head_mask=None,
-<<<<<<< HEAD
         output_hidden_states=False,
-=======
         output_attentions=None,
->>>>>>> master
     ):
         r"""
     Return:
@@ -952,11 +931,8 @@ class T5Model(T5PreTrainedModel):
                 attention_mask=attention_mask,
                 inputs_embeds=inputs_embeds,
                 head_mask=head_mask,
-<<<<<<< HEAD
                 output_hidden_states=output_hidden_states,
-=======
                 output_attentions=output_attentions,
->>>>>>> master
             )
 
         hidden_states = encoder_outputs[0]
@@ -979,11 +955,8 @@ class T5Model(T5PreTrainedModel):
             encoder_attention_mask=attention_mask,
             head_mask=head_mask,
             use_cache=use_cache,
-<<<<<<< HEAD
             output_hidden_states=output_hidden_states,
-=======
             output_attentions=output_attentions,
->>>>>>> master
         )
 
         if use_cache is True:
@@ -992,6 +965,14 @@ class T5Model(T5PreTrainedModel):
 
         return decoder_outputs + encoder_outputs
 
+
+    def _prune_heads(self, heads_to_prune):
+        """ Prunes heads of the model.
+            heads_to_prune: dict of {layer_num: list of heads to prune in this layer}
+            See base class PreTrainedModel
+        """
+        for layer, heads in heads_to_prune.items():
+            self.encoder.layer[layer].attention.prune_heads(heads)
 
 @add_start_docstrings("""T5 Model with a `language modeling` head on top. """, T5_START_DOCSTRING)
 class T5ForConditionalGeneration(T5PreTrainedModel):
@@ -1043,12 +1024,9 @@ class T5ForConditionalGeneration(T5PreTrainedModel):
         inputs_embeds=None,
         decoder_inputs_embeds=None,
         head_mask=None,
-<<<<<<< HEAD
         output_hidden_states=False,
-=======
         output_attentions=None,
         **kwargs
->>>>>>> master
     ):
         r"""
         labels (:obj:`torch.LongTensor` of shape :obj:`(batch_size,)`, `optional`, defaults to :obj:`None`):
@@ -1111,11 +1089,8 @@ class T5ForConditionalGeneration(T5PreTrainedModel):
                 attention_mask=attention_mask,
                 inputs_embeds=inputs_embeds,
                 head_mask=head_mask,
-<<<<<<< HEAD
                 output_hidden_states=output_hidden_states,
-=======
                 output_attentions=output_attentions,
->>>>>>> master
             )
 
         hidden_states = encoder_outputs[0]
@@ -1143,11 +1118,8 @@ class T5ForConditionalGeneration(T5PreTrainedModel):
             encoder_attention_mask=attention_mask,
             head_mask=head_mask,
             use_cache=use_cache,
-<<<<<<< HEAD
             output_hidden_states=output_hidden_states,
-=======
             output_attentions=output_attentions,
->>>>>>> master
         )
 
         # insert decoder past at right place
