@@ -31,20 +31,12 @@ from torch.nn import CrossEntropyLoss
 from .activations import gelu
 from .configuration_distilbert import DistilBertConfig
 from .file_utils import add_code_sample_docstrings, add_start_docstrings, add_start_docstrings_to_callable
-from .modeling_utils import (
-    PYTORCH_BASE_MODEL_CODE_SAMPLE_DOCSTRING,
-    PYTORCH_MASKED_LM_CODE_SAMPLE_DOCSTRING,
-    PYTORCH_QUESTION_ANSWERING_CODE_SAMPLE_DOCSTRING,
-    PYTORCH_SEQUENCE_CLASSIFICATION_CODE_SAMPLE_DOCSTRING,
-    PYTORCH_TOKEN_CLASSIFICATION_CODE_SAMPLE_DOCSTRING,
-    PreTrainedModel,
-    find_pruneable_heads_and_indices,
-    prune_linear_layer,
-)
+from .modeling_utils import PreTrainedModel, find_pruneable_heads_and_indices, prune_linear_layer
 
 
 logger = logging.getLogger(__name__)
 
+_TOKENIZER_FOR_DOC = "DistilBertTokenizer"
 
 DISTILBERT_PRETRAINED_MODEL_ARCHIVE_LIST = [
     "distilbert-base-uncased",
@@ -419,11 +411,7 @@ class DistilBertModel(DistilBertPreTrainedModel):
             self.transformer.layer[layer].attention.prune_heads(heads)
 
     @add_start_docstrings_to_callable(DISTILBERT_INPUTS_DOCSTRING)
-    @add_code_sample_docstrings(
-        PYTORCH_BASE_MODEL_CODE_SAMPLE_DOCSTRING,
-        tokenizer_class="DistilBertTokenizer",
-        checkpoint="distilbert-base-uncased",
-    )
+    @add_code_sample_docstrings(tokenizer_class=_TOKENIZER_FOR_DOC, checkpoint="distilbert-base-uncased")
     def forward(
         self, input_ids=None, attention_mask=None, head_mask=None, inputs_embeds=None, output_attentions=None,
     ):
@@ -495,11 +483,7 @@ class DistilBertForMaskedLM(DistilBertPreTrainedModel):
         return self.vocab_projector
 
     @add_start_docstrings_to_callable(DISTILBERT_INPUTS_DOCSTRING)
-    @add_code_sample_docstrings(
-        PYTORCH_MASKED_LM_CODE_SAMPLE_DOCSTRING,
-        tokenizer_class="DistilBertTokenizer",
-        checkpoint="distilbert-base-uncased",
-    )
+    @add_code_sample_docstrings(tokenizer_class=_TOKENIZER_FOR_DOC, checkpoint="distilbert-base-uncased")
     def forward(
         self,
         input_ids=None,
@@ -585,11 +569,7 @@ class DistilBertForSequenceClassification(DistilBertPreTrainedModel):
         self.init_weights()
 
     @add_start_docstrings_to_callable(DISTILBERT_INPUTS_DOCSTRING)
-    @add_code_sample_docstrings(
-        PYTORCH_SEQUENCE_CLASSIFICATION_CODE_SAMPLE_DOCSTRING,
-        tokenizer_class="DistilBertTokenizer",
-        checkpoint="distilbert-base-uncased",
-    )
+    @add_code_sample_docstrings(tokenizer_class=_TOKENIZER_FOR_DOC, checkpoint="distilbert-base-uncased")
     def forward(
         self,
         input_ids=None,
@@ -669,11 +649,7 @@ class DistilBertForQuestionAnswering(DistilBertPreTrainedModel):
         self.init_weights()
 
     @add_start_docstrings_to_callable(DISTILBERT_INPUTS_DOCSTRING)
-    @add_code_sample_docstrings(
-        PYTORCH_QUESTION_ANSWERING_CODE_SAMPLE_DOCSTRING,
-        tokenizer_class="DistilBertTokenizer",
-        checkpoint="distilbert-base-uncased",
-    )
+    @add_code_sample_docstrings(tokenizer_class=_TOKENIZER_FOR_DOC, checkpoint="distilbert-base-uncased")
     def forward(
         self,
         input_ids=None,
@@ -767,11 +743,7 @@ class DistilBertForTokenClassification(DistilBertPreTrainedModel):
         self.init_weights()
 
     @add_start_docstrings_to_callable(DISTILBERT_INPUTS_DOCSTRING)
-    @add_code_sample_docstrings(
-        PYTORCH_TOKEN_CLASSIFICATION_CODE_SAMPLE_DOCSTRING,
-        tokenizer_class="DistilBertTokenizer",
-        checkpoint="distilbert-base-uncased",
-    )
+    @add_code_sample_docstrings(tokenizer_class=_TOKENIZER_FOR_DOC, checkpoint="distilbert-base-uncased")
     def forward(
         self,
         input_ids=None,

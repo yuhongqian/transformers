@@ -149,11 +149,125 @@ def add_end_docstrings(*docstr):
     return docstring_decorator
 
 
+PYTORCH_TOKEN_CLASSIFICATION_CODE_SAMPLE_DOCSTRING = r"""
+    Examples::
+
+        from transformers import {tokenizer_class}, {model_class}
+        import torch
+
+        tokenizer = {tokenizer_class}.from_pretrained('{checkpoint}')
+        model = {model_class}.from_pretrained('{checkpoint}')
+
+        inputs = tokenizer("Hello, my dog is cute", return_tensors="pt")
+        labels = torch.tensor([1] * inputs["input_ids"].size(1)).unsqueeze(0)  # Batch size 1
+
+        outputs = model(**inputs, labels=labels)
+        loss, scores = outputs[:2]
+"""
+
+PYTORCH_QUESTION_ANSWERING_CODE_SAMPLE_DOCSTRING = r"""
+    Examples::
+
+        from transformers import {tokenizer_class}, {model_class}
+        import torch
+
+        tokenizer = {tokenizer_class}.from_pretrained('{checkpoint}')
+        model = {model_class}.from_pretrained('{checkpoint}')
+
+        input_ids = tokenizer("Hello, my dog is cute", return_tensors="pt")
+        start_positions = torch.tensor([1])
+        end_positions = torch.tensor([3])
+
+        outputs = model(**inputs, start_positions=start_positions, end_positions=end_positions)
+        loss, start_scores, end_scores = outputs[:3]
+"""
+
+PYTORCH_SEQUENCE_CLASSIFICATION_CODE_SAMPLE_DOCSTRING = r"""
+    Examples::
+
+        from transformers import {tokenizer_class}, {model_class}
+        import torch
+
+        tokenizer = {tokenizer_class}.from_pretrained('{checkpoint}')
+        model = {model_class}.from_pretrained('{checkpoint}')
+
+        inputs = tokenizer("Hello, my dog is cute", return_tensors="pt")
+        labels = torch.tensor([1]).unsqueeze(0)  # Batch size 1
+        outputs = model(**inputs, labels=labels)
+        loss, logits = outputs[:2]
+"""
+
+PYTORCH_MASKED_LM_CODE_SAMPLE_DOCSTRING = r"""
+    Examples::
+
+        from transformers import {tokenizer_class}, {model_class}
+        import torch
+
+        tokenizer = {tokenizer_class}.from_pretrained('{checkpoint}')
+        model = {model_class}.from_pretrained('{checkpoint}')
+
+        input_ids = tokenizer("Hello, my dog is cute", return_tensors="pt")["input_ids"]
+
+        outputs = model(input_ids, labels=input_ids)
+        loss, prediction_scores = outputs[:2]
+"""
+
+PYTORCH_BASE_MODEL_CODE_SAMPLE_DOCSTRING = r"""
+    Examples::
+
+        from transformers import {tokenizer_class}, {model_class}
+        import torch
+
+        tokenizer = {tokenizer_class}.from_pretrained('{checkpoint}')
+        model = {model_class}.from_pretrained('{checkpoint}')
+
+        inputs = tokenizer("Hello, my dog is cute", return_tensors="pt")
+        outputs = model(**inputs)
+
+        last_hidden_states = outputs[0]  # The last hidden-state is the first element of the output tuple
+"""
+
+PYTORCH_MULTIPLE_CHOICE_CODE_SAMPLE_DOCSTRING = r"""
+    Examples::
+
+        from transformers import BertTokenizer, BertForMultipleChoice
+        import torch
+
+        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+        model = BertForMultipleChoice.from_pretrained('bert-base-uncased')
+
+        prompt = "In Italy, pizza served in formal settings, such as at a restaurant, is presented unsliced."
+        choice0 = "It is eaten with a fork and a knife."
+        choice1 = "It is eaten while held in the hand."
+        labels = torch.tensor(0).unsqueeze(0)  # choice0 is correct (according to Wikipedia ;)), batch size 1
+
+        encoding = tokenizer.batch_encode_plus([[prompt, choice0], [prompt, choice1]], return_tensors='pt', pad_to_max_length=True)
+        outputs = model(**{k: v.unsqueeze(0) for k,v in encoding.items()}, labels=labels) # batch size is 1
+
+        # the linear classifier still needs to be trained
+        loss, logits = outputs[:2]
+"""
+
+
 def add_code_sample_docstrings(*docstr, tokenizer_class=None, checkpoint=None):
     def docstring_decorator(fn):
         model_class = fn.__qualname__.split(".")[0]
-        built_doc = docstr[-1].format(model_class=model_class, tokenizer_class=tokenizer_class, checkpoint=checkpoint)
-        fn.__doc__ = fn.__doc__ + "".join(docstr[:-1]) + built_doc
+
+        if "SequenceClassification" in model_class:
+            code_sample = PYTORCH_SEQUENCE_CLASSIFICATION_CODE_SAMPLE_DOCSTRING
+        elif "QuestionAnswering" in model_class:
+            code_sample = PYTORCH_QUESTION_ANSWERING_CODE_SAMPLE_DOCSTRING
+        elif "TokenClassification" in model_class:
+            code_sample = PYTORCH_TOKEN_CLASSIFICATION_CODE_SAMPLE_DOCSTRING
+        elif "MultipleChoice" in model_class:
+            code_sample = PYTORCH_MULTIPLE_CHOICE_CODE_SAMPLE_DOCSTRING
+        elif "MaskedLM" in model_class:
+            code_sample = PYTORCH_MASKED_LM_CODE_SAMPLE_DOCSTRING
+        elif "Model" in model_class:
+            code_sample = PYTORCH_BASE_MODEL_CODE_SAMPLE_DOCSTRING
+
+        built_doc = code_sample.format(model_class=model_class, tokenizer_class=tokenizer_class, checkpoint=checkpoint)
+        fn.__doc__ = fn.__doc__ + "".join(docstr) + built_doc
         return fn
 
     return docstring_decorator
