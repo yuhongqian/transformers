@@ -68,6 +68,7 @@ def find_pruneable_heads_and_indices(
     index: torch.LongTensor = torch.arange(len(mask))[mask].long()
     return heads, index
 
+
 PYTORCH_TOKEN_CLASSIFICATION_CODE_SAMPLE_DOCSTRING = r"""
     Examples::
 

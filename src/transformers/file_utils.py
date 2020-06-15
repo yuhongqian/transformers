@@ -149,6 +149,16 @@ def add_end_docstrings(*docstr):
     return docstring_decorator
 
 
+def add_code_sample_docstrings(*docstr, tokenizer_class=None, checkpoint=None):
+    def docstring_decorator(fn):
+        model_class = fn.__qualname__.split(".")[0]
+        built_doc = docstr[-1].format(model_class=model_class, tokenizer_class=tokenizer_class, checkpoint=checkpoint)
+        fn.__doc__ = fn.__doc__ + "".join(docstr[:-1]) + built_doc
+        return fn
+
+    return docstring_decorator
+
+
 def is_remote_url(url_or_filename):
     parsed = urlparse(url_or_filename)
     return parsed.scheme in ("http", "https")
