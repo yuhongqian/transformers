@@ -68,6 +68,84 @@ def find_pruneable_heads_and_indices(
     index: torch.LongTensor = torch.arange(len(mask))[mask].long()
     return heads, index
 
+PYTORCH_TOKEN_CLASSIFICATION_CODE_SAMPLE_DOCSTRING = r"""
+    Examples::
+
+        from transformers import {tokenizer_class}, {model_class}
+        import torch
+
+        tokenizer = {tokenizer_class}.from_pretrained('{checkpoint}')
+        model = {model_class}.from_pretrained('{checkpoint}')
+
+        inputs = tokenizer("Hello, my dog is cute", return_tensors="pt")
+        labels = torch.tensor([1] * inputs["input_ids"].size(1)).unsqueeze(0)  # Batch size 1
+
+        outputs = model(**inputs, labels=labels)
+        loss, scores = outputs[:2]
+"""
+
+PYTORCH_QUESTION_ANSWERING_CODE_SAMPLE_DOCSTRING = r"""
+    Examples::
+
+        from transformers import {tokenizer_class}, {model_class}
+        import torch
+
+        tokenizer = {tokenizer_class}.from_pretrained('{checkpoint}')
+        model = {model_class}.from_pretrained('{checkpoint}')
+
+        input_ids = tokenizer("Hello, my dog is cute", return_tensors="pt")
+        start_positions = torch.tensor([1])
+        end_positions = torch.tensor([3])
+
+        outputs = model(**inputs, start_positions=start_positions, end_positions=end_positions)
+        loss, start_scores, end_scores = outputs[:3]
+"""
+
+PYTORCH_SEQUENCE_CLASSIFICATION_CODE_SAMPLE_DOCSTRING = r"""
+    Examples::
+
+        from transformers import {tokenizer_class}, {model_class}
+        import torch
+
+        tokenizer = {tokenizer_class}.from_pretrained('{checkpoint}')
+        model = {model_class}.from_pretrained('{checkpoint}')
+
+        inputs = tokenizer("Hello, my dog is cute", return_tensors="pt")
+        labels = torch.tensor([1]).unsqueeze(0)  # Batch size 1
+        outputs = model(**inputs, labels=labels)
+        loss, logits = outputs[:2]
+"""
+
+PYTORCH_MASKED_LM_CODE_SAMPLE_DOCSTRING = r"""
+    Examples::
+
+        from transformers import {tokenizer_class}, {model_class}
+        import torch
+
+        tokenizer = {tokenizer_class}.from_pretrained('{checkpoint}')
+        model = {model_class}.from_pretrained('{checkpoint}')
+
+        input_ids = tokenizer("Hello, my dog is cute", return_tensors="pt")["input_ids"]
+
+        outputs = model(input_ids, labels=input_ids)
+        loss, prediction_scores = outputs[:2]
+"""
+
+PYTORCH_BASE_MODEL_CODE_SAMPLE_DOCSTRING = r"""
+    Examples::
+
+        from transformers import {tokenizer_class}, {model_class}
+        import torch
+
+        tokenizer = {tokenizer_class}.from_pretrained('{checkpoint}')
+        model = {model_class}.from_pretrained('{checkpoint}')
+
+        inputs = tokenizer("Hello, my dog is cute", return_tensors="pt")
+        outputs = model(**inputs)
+
+        last_hidden_states = outputs[0]  # The last hidden-state is the first element of the output tuple
+"""
+
 
 class ModuleUtilsMixin:
     """
