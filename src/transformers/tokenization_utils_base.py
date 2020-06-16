@@ -831,6 +831,9 @@ ENCODE_KWARGS_DOCSTRING = r"""
                 The value of this argument defines the number of overlapping tokens.
             is_pretokenized (:obj:`bool`, defaults to :obj:`False`):
                 Set to True to indicate the input is already tokenized
+            pad_to_multiple_of: (optional) Integer if set will pad the sequence to a multiple of the provided value.
+                This is especially useful to enable the use of Tensor Core on NVIDIA hardware with compute capability
+                >= 7.5 (Volta).
             return_tensors (:obj:`str`, `optional`, defaults to :obj:`None`):
                 Can be set to 'tf', 'pt' or 'np' to return respectively TensorFlow :obj:`tf.constant`,
                 PyTorch :obj:`torch.Tensor` or Numpy :oj: `np.ndarray` instead of a list of python integers.
@@ -1389,6 +1392,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin):
         max_length: Optional[int] = None,
         stride: int = 0,
         is_pretokenized: bool = False,
+        pad_to_multiple_of: Optional[int] = None,
         return_tensors: Optional[Union[str, TensorType]] = None,
         return_token_type_ids: Optional[bool] = None,
         return_attention_mask: Optional[bool] = None,
@@ -1430,6 +1434,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin):
                 max_length=max_length,
                 stride=stride,
                 is_pretokenized=is_pretokenized,
+                pad_to_multiple_of=pad_to_multiple_of,
                 return_tensors=return_tensors,
                 return_token_type_ids=return_token_type_ids,
                 return_attention_masks=return_attention_mask,
@@ -1450,6 +1455,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin):
                 max_length=max_length,
                 stride=stride,
                 is_pretokenized=is_pretokenized,
+                pad_to_multiple_of=pad_to_multiple_of,
                 return_tensors=return_tensors,
                 return_token_type_ids=return_token_type_ids,
                 return_attention_mask=return_attention_mask,
@@ -1471,6 +1477,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin):
         max_length: Optional[int] = None,
         stride: int = 0,
         is_pretokenized: bool = False,
+        pad_to_multiple_of: Optional[int] = None,
         return_tensors: Optional[Union[str, TensorType]] = None,
         return_token_type_ids: Optional[bool] = None,
         return_attention_mask: Optional[bool] = None,
@@ -1510,6 +1517,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin):
             max_length=max_length,
             stride=stride,
             is_pretokenized=is_pretokenized,
+            pad_to_multiple_of=pad_to_multiple_of,
             return_tensors=return_tensors,
             return_token_type_ids=return_token_type_ids,
             return_attention_mask=return_attention_mask,
@@ -1531,6 +1539,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin):
         max_length: Optional[int] = None,
         stride: int = 0,
         is_pretokenized: bool = False,
+        pad_to_multiple_of: Optional[int] = None,
         return_tensors: Optional[Union[str, TensorType]] = None,
         return_token_type_ids: Optional[bool] = None,
         return_attention_mask: Optional[bool] = None,
@@ -1559,6 +1568,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin):
         max_length: Optional[int] = None,
         stride: int = 0,
         is_pretokenized: bool = False,
+        pad_to_multiple_of: Optional[int] = None,
         return_tensors: Optional[Union[str, TensorType]] = None,
         return_token_type_ids: Optional[bool] = None,
         return_attention_masks: Optional[bool] = None,
@@ -1596,6 +1606,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin):
             max_length=max_length,
             stride=stride,
             is_pretokenized=is_pretokenized,
+            pad_to_multiple_of=pad_to_multiple_of,
             return_tensors=return_tensors,
             return_token_type_ids=return_token_type_ids,
             return_attention_masks=return_attention_masks,
@@ -1623,6 +1634,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin):
         max_length: Optional[int] = None,
         stride: int = 0,
         is_pretokenized: bool = False,
+        pad_to_multiple_of: Optional[int] = None,
         return_tensors: Optional[Union[str, TensorType]] = None,
         return_token_type_ids: Optional[bool] = None,
         return_attention_masks: Optional[bool] = None,
